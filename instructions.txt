@@ -1,0 +1,4 @@
+Bước 1: Xử lý text: file .lab - chữ tất cả viết hoa, không dấu chấm câu phẩy, chắm, vv.
+Bước 2: audio - convert file wav, channel mono, bitrate 16 bit, sample 22050
+run: python3 -m aligner -a [folder chứa file .wav và .lab]
+Bước 3: 
