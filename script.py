@@ -69,5 +69,6 @@ for row in csv_f:
     for index in range(len(data["imgs"][i]["texts"])) :
       s = data["imgs"][i]["texts"][index]["content"]
       s = re.sub(ur"[^\w\d'\s]+",'',s)
+      s = re.sub("\'.?",'', s)
       file.write(s.upper() + " ")
   file.close()
