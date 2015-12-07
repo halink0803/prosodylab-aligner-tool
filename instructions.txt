@@ -1,1 +1,17 @@
 - Chuẩn bị data
++ export file csv dạng conversation (Look, listen and repeat)
++ đặt file script.py vào cùng folder với file csv
++ mở terminal và change folder vào folder chứa file script.py
++ chạy lệnh: python script.py
+để sinh các file .lab (những file .lab bắt đầu bằng số là số thứ tự của dòng trong file csv chứa dữ liệu json và thiếu trường "audio")
++ đặt các file audio tương ứng với các file lab vào cùng folder với file .lab
++ trong terminal, chạy lệnh sau trong folder Prosodylab-Aligner
+  python3 -m aligner -a [đường dẫn tới folder chứa các file audio và .lab]
+  - cắm máy đợi
+-  Các lỗi có thể gặp:
+    missing files - xem list những file chưa có trong missing.txt - solution: bổ sung file thiếu vào folder chứa file .lab
+    missing word - xem list những từ chưa có tại file OOV.txt - sửa những từ sai thành từ có trong từ điển file eng.dict
+ + Sau khi cắm máy chạy xong, các file .TextGrid sẽ được sinh ra trong folder chứa file .lab
+ + mở terminal, chạy lệnh sau trong folder chứa các file .TextGrid
+  python textgrid_to_json.py [đường dẫn tới folder chứa các file .TextGrid]
+  Kết quả trả về là các file .json tương ứng
