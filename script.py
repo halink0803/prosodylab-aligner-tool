@@ -72,13 +72,14 @@ for row in csv_f:
   data = json.loads(row[1])
 
   #file name
+  filename = ''  
   if 'audio' in data:
-      filename = data["audio"]
+      filename = filename + data["audio"]
       pos = filename.rfind('/')
       filename = filename[pos+1:len(filename)-4]
   else:
       filename = str(count)
-  filename = filename + ".lab"
+  filename = row[3] + '-' + filename + ".lab"
   file = open(filename, 'w')
 
   #introduction
