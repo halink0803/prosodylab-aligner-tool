@@ -1,4 +1,4 @@
-import sys, os, tgt, json, csv, string
+import sys, os, tgt, json, csv, string, MySQLdb
 
 folder = sys.argv[1]
 
@@ -9,8 +9,10 @@ f = open("exercises.csv")
 csv_f = csv.reader(f)
 
 json_list =[]
+id_list = []
 for row in csv_f:
     json_list.append(row[1])
+    id_list.append(int(row[0]))
 
 def match_file(f):
     for i in range(0, len(json_list)) :
@@ -46,6 +48,7 @@ for f in files:
     #update json
     json_type = json.loads(json_list[index_json])
     count = 0
+    print f
     for i in json_type["imgs"]:
         for j in i["texts"]:
             words = j["content"].split(" ")
@@ -53,8 +56,22 @@ for f in files:
                 words[index] = '[' + str(intervals[count].start_time) + ']' + words[index] + '[' + str(intervals[count].end_time) + ']'
                 count += 1
             j["content"] = " ".join(words)
-    json_file_name = f[:len(f)-9] + ".json"
-    json_file = open(json_file_name, 'w')
-    json_file.write(json.dumps(json_type))
-    json_file.close
-    break
+    # json_file_name = f[:len(f)-9] + ".json"
+    # json_file = open(json_file_name, 'w')
+    # json_file.write(json.dumps(json_type))
+    # json_file.close
+
+    #update sql
+    db = MySQLdb.connect("localhost", "root", "t00r", "sachmem_development", unix_socket="/Applications/XAMPP/xamppfiles/var/mysql/mysql.sock")
+
+    cursor = db.cursor()
+
+    # cursor.execute("SELECT VERSION()")
+
+    sql = "UPDATE exercises SET content = %s WHERE id = %s"
+
+    # Execute the SQL command
+    cursor.execute(sql, (json.dumps(json_type), id_list[index_json] ))
+    # Commit your changes in the database
+    db.commit()
+    db.close

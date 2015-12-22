@@ -1,4 +1,5 @@
 - Chuẩn bị data
++ audio file wav, bitrate 16bit, sample rate 22050, channel mono, RIFF
 + export file csv dạng conversation (Look, listen and repeat)
 + đặt file script.py vào cùng folder với file csv
 + mở terminal và change folder vào folder chứa file script.py
