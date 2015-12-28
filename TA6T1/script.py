@@ -72,36 +72,64 @@ for row in csv_f:
   data = json.loads(row[1])
 
   #file name
-  filename = ''  
+  filename = ''
   if 'audio' in data:
       filename = filename + data["audio"]
       pos = filename.rfind('/')
       filename = filename[pos+1:len(filename)-4]
   else:
       filename = str(count)
-  filename = row[3] + '-' + filename + ".lab"
+  filename = filename + ".lab"
   file = open(filename, 'w')
 
   #introduction
-  page_number = data["pageNumber"]
-  page_number = int(page_number)
-  str_page_number = number_to_string(page_number)
-  lesson_number = row[5].split(" ")[1]
+  str_page_number = ""
+  if "pageNumber" in data:
+      if data["pageNumber"] != '':
+          page_number = data["pageNumber"]
+          page_number = int(page_number)
+          str_page_number = number_to_string(page_number)
+      else:
+          print row[0]
+  else:
+      print row[0]
+      #conversation 2 - skip
+  # lesson_number = row[5].split(" ")[1]
   unit_name = ""
-  if lesson_number == "1":
-      unit_name = row[4]
-      unit_name = unit_name.split(" ")
-      unit_name[1] = number_to_string(int(unit_name[1]))
-      unit_name = " ".join(unit_name)
-      unit_name = standardize_string(unit_name)
-  tmp = "PAGE " + str_page_number + " " +  unit_name + " LESSON " + number[int(lesson_number)] + " ACTIVITIES ONE LOOK LISTEN AND REPEAT "
+
+  # conversation 1
+  # if lesson_number == "1":
+  #     unit_name = row[4]
+  #     unit_name = unit_name.split(" ")
+  #     unit_name[1] = number_to_string(int(unit_name[1]))
+  #     unit_name = " ".join(unit_name)
+  #     unit_name = standardize_string(unit_name)
+  # tmp = "PAGE " + str_page_number + " " +  unit_name + " LESSON " + number[int(lesson_number)] + " ACTIVITIES ONE LOOK LISTEN AND REPEAT "
+
+
+  #conversation 2
+  lesson_name = row[5]
+  unit_name = row[4]
+  unit_name = unit_name.split(" ")
+  unit_name[1] = number_to_string(int(unit_name[1]))
+  unit_name = " ".join(unit_name)
+  unit_name = standardize_string(unit_name)
+  tmp = unit_name + " PAGE " + str_page_number + " " + lesson_name + " ACTIVITIES ONE LISTEN AND READ "
+
+  #both
   file.write(tmp)
 
-  #main content
-  for i in range(len(data['imgs'])) :
-    file.write(string.ascii_uppercase[i] + " ")
-    for index in range(len(data["imgs"][i]["texts"])) :
-      s = data["imgs"][i]["texts"][index]["content"]
+  #main content - conversation 1
+  # for i in range(len(data['imgs'])) :
+  #   file.write(string.ascii_uppercase[i] + " ")
+  #   for index in range(len(data["imgs"][i]["texts"])) :
+  #     s = data["imgs"][i]["texts"][index]["content"]
+  #     s = standardize_string(s)
+  #     file.write(s + " ")
+
+  #main content - conversation 2
+  for i in range(len(data['sentences'])) :
+      s = data["sentences"][i]["content"]
       s = standardize_string(s)
       file.write(s + " ")
   file.close()
