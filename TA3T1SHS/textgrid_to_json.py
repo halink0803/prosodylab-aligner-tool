@@ -1,4 +1,4 @@
-import sys, os, tgt, json, csv, string, MySQLdb
+import sys, os, tgt, json, csv, string, MySQLdb, re
 
 folder = sys.argv[1]
 
@@ -39,6 +39,10 @@ def remove_redundant(intervals):
 
     return intervals
 
+def standardize(word):
+    word = re.sub(r'\[.+?\]\s*', '', word)
+    return word
+
 #handle the textgrid file
 files = [file for file in os.listdir(folder) if file.endswith(".TextGrid")]
 for f in files:
@@ -58,15 +62,19 @@ for f in files:
     for i in json_type["imgs"]:
         for j in i["texts"]:
             words = j["content"].split(" ")
+            for i in range(0,len(words)):
+                words[i] = standardize(words[i])
             j["begin"] = str(intervals[count].start_time)
-            # print words
+            end_t = 0
             for index in range(0, len(words)):
-                print words[index]
-                print intervals[count]
+                # print words[index]
+                # print intervals[count]
                 words[index] = '[' + str(intervals[count].start_time) + ']' + words[index] + '[' + str(intervals[count].end_time) + ']'
                 count += 1
-                if count == len(words)-1:
+                end_t += 1
+                if end_t == len(words)-1:
                     j["end"] = str(intervals[count].end_time)
+                    # print intervals[count].end_time
             j["content"] = " ".join(words)
     # json_file_name = f[:len(f)-9] + ".json"
     # json_file = open(json_file_name, 'w')
